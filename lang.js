@@ -526,3 +526,5 @@ function setLanguage(lang) {
 
     refreshDynamicText();
 }
+
+document.addEventListener('DOMContentLoaded', () => setLanguage(document.getElementById('lang-selector').value));

@@ -163,6 +163,4 @@ document.addEventListener('DOMContentLoaded', () => {
             if (mode in whenPanelActivates) whenPanelActivates[mode]();
         });
     });
-    
-    setLanguage(document.getElementById('lang-selector').value);
 });
