@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彝文重码剪枝分析工具</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .tab-bar {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #d0d5dd;
+            background: #f9fafb;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.2s;
+            border-radius: 8px 8px 0 0;
+            border-bottom: none;
+        }
+        .tab-btn:hover { background: #eef2ff; }
+        .tab-btn.active {
+            background: #fff;
+            color: #1d4ed8;
+            border-color: #d0d5dd;
+            border-bottom: 2px solid #fff;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        .tab-content {
+            display: none;
+            background: #fff;
+            border: 1px solid #d0d5dd;
+            border-radius: 0 8px 8px 8px;
+            padding: 24px;
+            min-height: 400px;
+            margin-top: -1px;
+        }
+        .tab-content.active { display: block; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #f8faff;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background: #f8faff;
+            font-weight: 600;
+            color: #374151;
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid #d0d5dd;
+        }
+        tr:hover { background: #f9fafb; }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-high { background: #fee2e2; color: #991b1b; }
+        .badge-medium { background: #fef3c7; color: #92400e; }
+        .badge-low { background: #dbeafe; color: #1e40af; }
+        
+        .char-cell {
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+        
+        pre {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 600px;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .copy-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #1d4ed8;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin: 8px 8px 8px 0;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover { background: #1e40af; }
+        .copy-btn.copied { background: #059669; }
+        
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filter-row label {
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+        }
+        .filter-row select {
+            padding: 6px 12px;
+            border: 1px solid #d0d5dd;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>彝文重码结构化分析工具</h1>
+    <p class="subtitle">为概率模型剪枝决策提供数据支持</p>
+    
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('overview')">📊 总览</button>
+        <button class="tab-btn" onclick="switchTab('table')">📋 重码组详情</button>
+        <button class="tab-btn" onclick="switchTab('csharp')">💻 C# 导出</button>
+        <button class="tab-btn" onclick="switchTab('json')">📦 JSON 导出</button>
+    </div>
+    
+    <div id="tab-overview" class="tab-content active">
+        <div class="loading">分析中...</div>
+    </div>
+    <div id="tab-table" class="tab-content">
+        <div class="loading">分析中...</div>
+    </div>
+    <div id="tab-csharp" class="tab-content">
+        <div class="loading">生成中...</div>
+    </div>
+    <div id="tab-json" class="tab-content">
+        <div class="loading">生成中...</div>
+    </div>
+</div>
+
+<script src="strokes.js"></script>
+<script>
+(function() {
+    // ==================== 核心分析函数 ====================
+    
+    /**
+     * 回到最基础的笔画：从 expanded data 中提取所有使用到的基础笔画符号
+     */
+    function extractPrimitives(expandedData) {
+        const primitives = new Set();
+        for (const expansions of Object.values(expandedData)) {
+            for (const exp of expansions) {
+                for (const key of Object.keys(exp)) {
+                    primitives.add(key);
+                }
+            }
+        }
+        return primitives;
+    }
+    
+    /**
+     * 计算单个展开结果的笔画复杂度
+     */
+    function calcComplexity(expansion) {
+        let total = 0;
+        for (const count of Object.values(expansion)) {
+            total += count;
+        }
+        return total;
+    }
+    
+    /**
+     * 找出所有重码组（去重），并附带完整分析
+     */
+    function analyzeDuplicates(expandedData) {
+        // Step 1: 建立签名 -> 字符集合的映射
+        const sigToChars = new Map();
+        
+        for (const [char, expansions] of Object.entries(expandedData)) {
+            if (!expansions || expansions.length === 0) continue;
+            for (const exp of expansions) {
+                const sig = JSON.stringify(Object.entries(exp).sort());
+                if (!sigToChars.has(sig)) {
+                    sigToChars.set(sig, new Set());
+                }
+                sigToChars.get(sig).add(char);
+            }
+        }
+        
+        // Step 2: 去重归组
+        const dedupMap = new Map(); // dedupKey -> { chars, signatures, complexityRange }
+        
+        for (const [sig, charSet] of sigToChars.entries()) {
+            if (charSet.size <= 1) continue;
+            const sortedChars = Array.from(charSet).sort();
+            const dedupKey = JSON.stringify(sortedChars);
+            
+            if (!dedupMap.has(dedupKey)) {
+                dedupMap.set(dedupKey, {
+                    chars: sortedChars,
+                    signatures: [sig],
+                });
+            } else {
+                dedupMap.get(dedupKey).signatures.push(sig);
+            }
+        }
+        
+        // Step 3: 计算字符参与度
+        const charGroupCount = {}; // char -> number of groups
+        for (const group of dedupMap.values()) {
+            for (const char of group.chars) {
+                charGroupCount[char] = (charGroupCount[char] || 0) + 1;
+            }
+        }
+        
+        // Step 4: 计算复杂度
+        // 为每个字符取所有展开结果中最小/最大/平均复杂度
+        const charComplexityStats = {};
+        for (const [char, expansions] of Object.entries(expandedData)) {
+            if (!expansions || expansions.length === 0) continue;
+            const complexities = expansions.map(calcComplexity);
+            charComplexityStats[char] = {
+                min: Math.min(...complexities),
+                max: Math.max(...complexities),
+                avg: complexities.reduce((a, b) => a + b, 0) / complexities.length,
+            };
+        }
+        
+        // Step 5: 为每个重码组计算各项指标
+        const groups = [];
+        for (const group of dedupMap.values()) {
+            const comps = group.chars.map(c => charComplexityStats[c]?.avg || 0);
+            const minComp = Math.min(...comps);
+            const maxComp = Math.max(...comps);
+            const avgComp = comps.reduce((a, b) => a + b, 0) / comps.length;
+            
+            // 剪枝优先级评分
+            // 综合考虑：簇大小、签名数、字符参与度、复杂度差异
+            const clusterSize = group.chars.length;
+            const sigCount = group.signatures.length;
+            const maxParticipation = Math.max(...group.chars.map(c => charGroupCount[c] || 0));
+            const complexitySpread = maxComp - minComp;
+            
+            // 评分公式（可根据实际需求调整权重）
+            const priorityScore = (
+                clusterSize * 10 +           // 簇越大，越需要关注
+                sigCount * 3 +               // 签名越多，越稳定
+                maxParticipation * 2 +       // 参与其他组越多，越模糊
+                (complexitySpread === 0 ? 5 : 0)  // 复杂度相同则额外加分
+            );
+            
+            // 优先级分层
+            let priority;
+            if (priorityScore >= 30) priority = 'high';
+            else if (priorityScore >= 15) priority = 'medium';
+            else priority = 'low';
+            
+            groups.push({
+                chars: group.chars,
+                signatures: group.signatures,
+                signatureCount: sigCount,
+                clusterSize,
+                charParticipation: Object.fromEntries(
+                    group.chars.map(c => [c, charGroupCount[c] || 0])
+                ),
+                complexities: Object.fromEntries(
+                    group.chars.map(c => [c, charComplexityStats[c]?.avg || 0])
+                ),
+                minComplexity: minComp,
+                maxComplexity: maxComp,
+                avgComplexity: avgComp,
+                complexitySpread,
+                maxParticipation,
+                priorityScore,
+                priority,
+            });
+        }
+        
+        // 排序：优先级降序
+        groups.sort((a, b) => b.priorityScore - a.priorityScore);
+        
+        return {
+            groups,
+            totalGroups: groups.length,
+            totalCharsWithDuplicates: new Set(groups.flatMap(g => g.chars)).size,
+            charGroupCount,
+            charComplexityStats,
+            priorityDistribution: {
+                high: groups.filter(g => g.priority === 'high').length,
+                medium: groups.filter(g => g.priority === 'medium').length,
+                low: groups.filter(g => g.priority === 'low').length,
+            },
+        };
+    }
+    
+    // ==================== 运行分析 ====================
+    
+    let analysisResult = null;
+    
+    function runAnalysis() {
+        if (typeof charStrokesExpanded === 'undefined') {
+            alert('错误：找不到 charStrokesExpanded。请确保 strokes.js 已加载。');
+            return;
+        }
+        analysisResult = analyzeDuplicates(charStrokesExpanded);
+        renderAllTabs();
+    }
+    
+    // ==================== 渲染 ====================
+    
+    function renderAllTabs() {
+        if (!analysisResult) return;
+        renderOverview();
+        renderTable();
+        renderCSharp();
+        renderJson();
+    }
+    
+    function renderOverview() {
+        const { groups, totalGroups, totalCharsWithDuplicates, priorityDistribution, charGroupCount } = analysisResult;
+        
+        // 找出被最多重码组引用的字符
+        const topAmbiguous = Object.entries(charGroupCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10);
+        
+        let html = '<div class="stats-grid">';
+        html += `<div class="stat-card"><div class="stat-value">${totalGroups}</div><div class="stat-label">唯一重码组</div></div>`;
+        html += `<div class="stat-card"><div class="stat-value">${totalCharsWithDuplicates}</div><div class="stat-label">参与重码的字符</div></div>`;
+        html += `<div class="stat-card"><div class="stat-value">${priorityDistribution.high}</div><div class="stat-label">🔴 高优先级</div></div>`;
+        html += `<div class="stat-card"><div class="stat-value">${priorityDistribution.medium}</div><div class="stat-label">🟡 中优先级</div></div>`;
+        html += `<div class="stat-card"><div class="stat-value">${priorityDistribution.low}</div><div class="stat-label">🔵 低优先级</div></div>`;
+        html += '</div>';
+        
+        html += '<h3 style="margin-top: 20px; margin-bottom: 12px;">🔝 最"模糊"的字符（参与重码组最多）</h3>';
+        html += '<table><tr><th>排名</th><th>字符</th><th>参与重码组数</th></tr>';
+        topAmbiguous.forEach(([char, count], i) => {
+            html += `<tr><td>#${i + 1}</td><td class="char-cell">${char}</td><td>${count}</td></tr>`;
+        });
+        html += '</table>';
+        
+        document.getElementById('tab-overview').innerHTML = html;
+    }
+    
+    function renderTable() {
+        const { groups } = analysisResult;
+        
+        let html = '<div class="filter-row">';
+        html += '<label>优先级筛选：</label>';
+        html += `<select id="priority-filter" onchange="filterTable()">
+            <option value="all">全部 (${groups.length})</option>
+            <option value="high">🔴 高优先级 (${groups.filter(g => g.priority === 'high').length})</option>
+            <option value="medium">🟡 中优先级 (${groups.filter(g => g.priority === 'medium').length})</option>
+            <option value="low">🔵 低优先级 (${groups.filter(g => g.priority === 'low').length})</option>
+        </select>`;
+        html += '<label>最小簇大小：</label>';
+        html += `<select id="minsize-filter" onchange="filterTable()">
+            <option value="2">≥2</option>
+            <option value="3">≥3</option>
+            <option value="4">≥4</option>
+            <option value="5">≥5</option>
+        </select>`;
+        html += '</div>';
+        
+        html += '<div style="max-height: 600px; overflow-y: auto;"><table id="groups-table">';
+        html += '<thead><tr>';
+        html += '<th>#</th><th>优先级</th><th>评分</th><th>字符组</th><th>簇大小</th>';
+        html += '<th>签名数</th><th>复杂度范围</th><th>最大参与度</th>';
+        html += '</tr></thead><tbody>';
+        
+        groups.forEach((g, i) => {
+            const badgeClass = g.priority === 'high' ? 'badge-high' : 
+                               g.priority === 'medium' ? 'badge-medium' : 'badge-low';
+            html += `<tr data-priority="${g.priority}" data-clustersize="${g.clusterSize}">`;
+            html += `<td>${i + 1}</td>`;
+            html += `<td><span class="badge ${badgeClass}">${g.priority}</span></td>`;
+            html += `<td>${g.priorityScore.toFixed(0)}</td>`;
+            html += `<td class="char-cell">${g.chars.join(' ')}</td>`;
+            html += `<td>${g.clusterSize}</td>`;
+            html += `<td>${g.signatureCount}</td>`;
+            html += `<td>${g.minComplexity.toFixed(1)} ~ ${g.maxComplexity.toFixed(1)}</td>`;
+            html += `<td>${g.maxParticipation}</td>`;
+            html += '</tr>';
+        });
+        
+        html += '</tbody></table></div>';
+        
+        document.getElementById('tab-table').innerHTML = html;
+    }
+    
+    function filterTable() {
+        const priorityFilter = document.getElementById('priority-filter')?.value || 'all';
+        const minSize = parseInt(document.getElementById('minsize-filter')?.value || '2');
+        
+        const rows = document.querySelectorAll('#groups-table tbody tr');
+        rows.forEach(row => {
+            const rowPrio = row.dataset.priority;
+            const rowSize = parseInt(row.dataset.clustersize);
+            const prioMatch = priorityFilter === 'all' || rowPrio === priorityFilter;
+            const sizeMatch = rowSize >= minSize;
+            row.style.display = prioMatch && sizeMatch ? '' : 'none';
+        });
+    }
+    
+    function renderCSharp() {
+        const { groups } = analysisResult;
+        
+        const high = groups.filter(g => g.priority === 'high');
+        const medium = groups.filter(g => g.priority === 'medium');
+        const low = groups.filter(g => g.priority === 'low');
+        
+        // 生成 C# 二维数组
+        function toCSharpArray(groups) {
+            if (groups.length === 0) return 'new string[][] { }';
+            const lines = groups.map(g => {
+                const chars = g.chars.map(c => `"${c}"`).join(', ');
+                return `        new string[] { ${chars} }`;
+            });
+            return 'new string[][] {\n' + lines.join(',\n') + '\n    }';
+        }
+        
+        function toCSharpDict(obj) {
+            if (Object.keys(obj).length === 0) return 'new Dictionary<string, int>()';
+            const entries = Object.entries(obj).map(([k, v]) => `        { "${k}", ${v} }`).join(',\n');
+            return 'new Dictionary<string, int> {\n' + entries + '\n    }';
+        }
+        
+        // 字符参与度字典
+        const charCountSorted = Object.fromEntries(
+            Object.entries(analysisResult.charGroupCount).sort((a, b) => b[1] - a[1])
+        );
+        
+        let csharp = `// ============================================
+// 彝文重码剪枝数据（自动生成）
+// 生成时间: ${new Date().toISOString()}
+// 总重码组: ${analysisResult.totalGroups}
+// 参与字符: ${analysisResult.totalCharsWithDuplicates}
+// ============================================
+
+using System.Collections.Generic;
+
+public static class YiDuplicateData
+{
+    /// <summary>
+    /// 高优先级重码组：建议概率模型重点覆盖
+    /// (${high.length} 组)
+    /// </summary>
+    public static readonly string[][] HighPriorityDuplicates = ${toCSharpArray(high)};
+
+    /// <summary>
+    /// 中等优先级重码组：建议概率模型部分覆盖
+    /// (${medium.length} 组)
+    /// </summary>
+    public static readonly string[][] MediumPriorityDuplicates = ${toCSharpArray(medium)};
+
+    /// <summary>
+    /// 低优先级重码组：可暂不覆盖
+    /// (${low.length} 组)
+    /// </summary>
+    public static readonly string[][] LowPriorityDuplicates = ${toCSharpArray(low)};
+
+    /// <summary>
+    /// 所有重码组（按优先级排序）
+    /// </summary>
+    public static readonly string[][] AllDuplicates = ${toCSharpArray(groups)};
+
+    /// <summary>
+    /// 字符参与度索引：每个字符参与了多少个重码组
+    /// （值越大说明该字符越"模糊"，排序时需要更多上下文）
+    /// </summary>
+    public static readonly Dictionary<string, int> CharDuplicateParticipation = ${toCSharpDict(charCountSorted)};
+}`;
+        
+        document.getElementById('tab-csharp').innerHTML = `
+            <p style="margin-bottom: 12px; color: #666;">
+                ✅ 可直接复制到 C# 训练脚本中使用。包含 <strong>${high.length}</strong> 组高优先级、
+                <strong>${medium.length}</strong> 组中优先级、<strong>${low.length}</strong> 组低优先级重码。
+            </p>
+            <button class="copy-btn" onclick="copyCSharp()">📋 复制全部代码</button>
+            <pre id="csharp-code">${escapeHtml(csharp)}</pre>
+        `;
+        
+        window._csharpCode = csharp;
+    }
+    
+    function renderJson() {
+        const { groups, totalGroups, totalCharsWithDuplicates, priorityDistribution, charGroupCount, charComplexityStats } = analysisResult;
+        
+        const json = {
+            meta: {
+                generatedAt: new Date().toISOString(),
+                totalUniqueGroups: totalGroups,
+                totalCharsWithDuplicates,
+                priorityDistribution,
+            },
+            groups: groups.map(g => ({
+                chars: g.chars,
+                priority: g.priority,
+                priorityScore: Math.round(g.priorityScore),
+                clusterSize: g.clusterSize,
+                signatureCount: g.signatureCount,
+                avgComplexity: Math.round(g.avgComplexity * 10) / 10,
+                complexitySpread: Math.round(g.complexitySpread * 10) / 10,
+                charParticipation: g.charParticipation,
+            })),
+            charGroupCount,
+            topAmbiguousChars: Object.entries(charGroupCount)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 20)
+                .map(([c, n]) => ({ char: c, groupCount: n })),
+        };
+        
+        document.getElementById('tab-json').innerHTML = `
+            <p style="margin-bottom: 12px; color: #666;">
+                ✅ 可直接复制 JSON 数据，用于任何语言的训练脚本。
+            </p>
+            <button class="copy-btn" onclick="copyJson()">📋 复制 JSON</button>
+            <pre id="json-code">${escapeHtml(JSON.stringify(json, null, 2))}</pre>
+        `;
+        
+        window._jsonCode = JSON.stringify(json, null, 2);
+    }
+    
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+    
+    // ==================== 复制功能 ====================
+    
+    window.copyCSharp = function() {
+        copyToClipboard(window._csharpCode, event.target);
+    };
+    
+    window.copyJson = function() {
+        copyToClipboard(window._jsonCode, event.target);
+    };
+    
+    function copyToClipboard(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            if (btn) {
+                btn.textContent = '✅ 已复制！';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = btn.textContent.replace('✅ 已复制！', '📋 复制');
+                    btn.classList.remove('copied');
+                }, 2000);
+            }
+        });
+    }
+    
+    // ==================== Tab 切换 ====================
+    
+    window.switchTab = function(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        document.querySelector(`.tab-btn[onclick*="${tabName}"]`)?.classList.add('active');
+        document.getElementById(`tab-${tabName}`)?.classList.add('active');
+        
+        if (tabName === 'table') {
+            setTimeout(filterTable, 100);
+        }
+    };
+    
+    window.filterTable = filterTable;
+    
+    // ==================== 启动 ====================
+    
+    runAnalysis();
+    
+})();
+</script>
+</body>
+</html>
