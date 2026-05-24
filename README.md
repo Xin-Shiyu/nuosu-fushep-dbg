@@ -3,7 +3,7 @@
 [![ja](https://img.shields.io/badge/ja-Japanese-pink.svg)](https://github.com/KotobaTrilius/nuosu-fushep/blob/main/README.ja.md)
 
 # Nuosu FUSHEP
-**ꃚꎹ / FUSHEP** (pronounced /fū.ʂɯ̂/, _foo-SHUR_), a Nuosu Yi Syllabary Character Finder &amp; Editor
+**ꃚꎹ / FUSHEP** (pronounced /fv̄.ʂɯ̂/, _foo-SHUR_), a Nuosu Yi Syllabary Character Finder &amp; Editor
 
 Version: 0.1.9
 

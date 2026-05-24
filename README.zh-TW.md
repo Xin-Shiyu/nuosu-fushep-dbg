@@ -1,7 +1,7 @@
 [![en](https://img.shields.io/badge/en-English-blue.svg)](https://github.com/KotobaTrilius/nuosu-fushep/blob/main/README.md)
 
 # Nuosu FUSHEP
-ꃚꎹ / FUSHEP（發音 /fū.ʂɯ̂/）——涼山規範彝文檢字編輯器
+ꃚꎹ / FUSHEP（發音 /fv̄.ʂɯ̂/）——涼山規範彝文檢字編輯器
 
 # 简介
 **涼山規範彝文**是用於書寫**彝語北部方言**（諾蘇話）的官方文字，亦是目前唯一一種獲得國家認可的彝語文字。

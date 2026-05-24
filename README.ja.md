@@ -1,7 +1,7 @@
 [![en](https://img.shields.io/badge/en-English-blue.svg)](https://github.com/KotobaTrilius/nuosu-fushep/blob/main/README.md)
 
 # Nuosu FUSHEP
-ꃚꎹ / FUSHEP（/fū.ʂɯ̂/ フシャ）——涼山規範彝（イ）文字検索・編集ツール
+ꃚꎹ / FUSHEP（/fv̄.ʂɯ̂/ フシュ）——涼山規範彝（イ）文字検索・編集ツール
 
 # 概要
 **涼山規範彝文字**は、**イ語北部方言**（ノス語）を表記するために用いられる公式文字であり、現在において国家から正式に承認された唯一のイ語文字です。
