@@ -48,8 +48,8 @@ const initials = {
 const finals = {
     "i":  ["i", "i"],
     "y":  ["z", "z̩"],
-    "yr": ["z̙", "z̙̩"],
-    "e":  ["ɯ", "ʉ̞"],
+    "yr": ["z̙", "z̙̍"],
+    "e":  ["ɯ", "ɯ̈"],
     "u":  ["v", "vʊ"],
     "ur": ["v̙", "v̙ɵ̙ᵊ"],
     "o":  ["o", "o"],
@@ -95,5 +95,66 @@ function toIPA(pinyin) {
         final = final + "r";
     }
 
-    return initials[initial][0] + finals[final][0] + tones[toneMark][0];
+    phonetic_ipa = {
+        "initial": initials[initial][1],
+        "final": finals[final][1],
+        "tone": tones[toneMark][1]
+    }
+
+    const initial_alt = {
+        "u": {
+            "bb": "b<sup>(~ʙ)</sup>",
+            "nb": "mb<sup>(~ʙ)</sup>",
+            "dd": "dʙ",
+            "nd": "ndʙ"
+        },
+        "ur": {
+            "bb": "ʙ",
+            "nb": "mʙ",
+            "d": "tʙ",
+            "t": "tʰʙ̥",
+            "dd": "dʙ",
+            "nd": "ndʙ"
+        }
+    }
+    const final_alt_groups = {
+        "u": [
+            [["bb", "nb", "f", "v", "dd", "nd"], "ʊ"],
+            [["m"], "̩"],
+            [["hm"], "m̩"],
+            [["l", "hl"], "̩˞ʷ"],
+            [["j", "q", "jj", "nj", "ny", "x", "y"], "ʉ"]
+        ],
+        "ur": [
+            [["b", "p", "bb", "nb"], "ʊ̙ᵊ"],
+            [["f", "v", "d", "t", "dd", "nd", "n", "hn"], "ɵ̙ᵊ"],
+            [["m"], "̙̍"],
+            [["hm"], "m̙̍"],
+            [["l", "hl"], "̙̩˞ʷ"]
+        ],
+        "y": [
+            [["l", "hl"], "̩˞"]
+        ],
+        "yr": [
+            [["l", "hl"], "̙̩˞"]
+        ],
+        "ie": [
+            [["j", "q", "jj", "nj", "ny", "x", "y"], "ɛ̙ᵊ<sup>(~a̙)</sup>"]
+        ]
+    }
+    if (final_alt_groups[final]) {
+        for (let i of final_alt_groups[final]) {
+            if (i[0].includes(initial)) {
+                phonetic_ipa["final"] = i[1]
+            }
+        }
+    }
+    if (initial_alt[final] && initial_alt[final][initial]) {
+        phonetic_ipa["initial"] = initial_alt[final][initial]
+    }
+
+    return {
+        phonemic: initials[initial][0] + finals[final][0] + tones[toneMark][0],
+        phonetic: phonetic_ipa["initial"] + phonetic_ipa["final"] + phonetic_ipa["tone"]
+    }
 }
