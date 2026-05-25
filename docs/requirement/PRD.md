@@ -10,7 +10,7 @@
 
 **FUSHEP** (ꃚꎹ, /fū.ʂɯ̂/) is a Nuosu Yi text tool built around two input methods — stroke encoding and romanization — backed by a structured syllabary database with radical decomposition, IPA phonetics, and context-aware trigram sorting.
 
-The current version (v0.1.9) is a functional prototype. v1.0 defines the product it should become.
+The current version (v1.0.0) is the first stable release.
 
 ---
 
