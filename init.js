@@ -1,3 +1,8 @@
+function charFromBtn(btn) {
+  const glyph = btn.querySelector('.char-glyph');
+  return glyph ? glyph.textContent : btn.textContent;
+}
+
 function insertAtCursor(myField, myValue) {
     if (document.selection) {
         myField.focus();
@@ -23,23 +28,60 @@ function insertAtCursor(myField, myValue) {
 
 function createCharButton(char, exact = false) {
     const btn = document.createElement('button');
-    btn.textContent = char;
     btn.className = exact ? 'char-btn exact-match' : 'char-btn';
-    
+
+    const pinyin = charInfo[char];
+    const showLabels = pinyin && pinyin !== 'w' && !pinyin.endsWith('=');
+
+    if (showLabels) {
+        const pinyinSpan = document.createElement('span');
+        pinyinSpan.className = 'char-pinyin';
+        pinyinSpan.textContent = pinyin;
+        btn.appendChild(pinyinSpan);
+    }
+
+    const glyph = document.createElement('span');
+    glyph.className = 'char-glyph';
+    glyph.textContent = char;
+    btn.appendChild(glyph);
+
+    if (showLabels) {
+        const ipa = toIPA(pinyin);
+        if (ipa) {
+            const ipaSpan = document.createElement('span');
+            ipaSpan.className = 'char-ipa';
+            ipaSpan.textContent = '/' + ipa + '/';
+            btn.appendChild(ipaSpan);
+        } else {
+            const ipaSpan = document.createElement('span');
+            ipaSpan.className = 'char-ipa';
+            ipaSpan.innerHTML = '&nbsp;';
+            btn.appendChild(ipaSpan);
+        }
+    }
+
     btn.addEventListener('click', () => {
-        insertAtCursor(editor, char);
+        if (currentImeMode === 'stroke' && typeof window.flushStrokeCandidate === 'function') {
+            window.flushStrokeCandidate(char);
+        } else {
+            insertAtCursor(editor, char);
+        }
+        const radicalPanel = btn.closest('.radical-panel');
+        if (radicalPanel) radicalPanel.classList.add('hidden');
     });
 
     btn.addEventListener('mouseenter', () => {
         showInfo(char);
     });
-    
+
     btn.addEventListener('mouseleave', () => {
         infoDisplay.textContent = t('info_default');
         infoDisplay.dataset.i18n = 'info_default';
     });
     return btn;
 }
+
+let currentImeMode = 'stroke';
 
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof charInfo === 'undefined') {
@@ -51,6 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.infoDisplay = document.getElementById('info-display');
     window.copyBtn = document.getElementById('copy-btn');
     window.transContent = document.getElementById('trans-content');
+    window.candidateBar = document.getElementById('candidate-bar');
+    window.candidateScroll = document.getElementById('candidate-scroll');
+    window.candidateToggle = document.getElementById('candidate-toggle');
+    window.modeSwitch = document.getElementById('mode-switch');
+    window.dictBtn = document.getElementById('dict-btn');
 
     const fontSelect = document.getElementById('editor-font-select');
 
@@ -60,12 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.showInfo = (char) => {
         const pinyin = charInfo[char] || "?";
         const strokes = charStrokes[char] || "";
-        
-        // const formattedStrokes = strokes ? strokes.split('').join('-') : t('info_none');
 
-        // FOR THE EXCEPTIONAL SYLLABLE ITERATION MARK "ꀕ" (TRANSLITERATED AS "w").
-        const isIterationMark = pinyin == 'w'; 
-        // FOR RADICAL CHARACTERS, WHICH ARE ROMANIZED WITH A FINAL "="
+        const isIterationMark = pinyin == 'w';
         const isRadicalChar = pinyin.at(-1) == '=';
 
         let ipaPart;
@@ -88,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <strong>${t('info_pinyin')}:</strong> ${pinyin} |
             ${ipaPart}
         `;
-        // | <strong>${t('info_strokes')}:</strong> ${formattedStrokes}
     };
 
     if (fontSelect) {
@@ -97,17 +139,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const fontMap = {
                 '--font-yi-sans':
-                    'var(--res-font-yi)',
+                    'var(--font-yi-sans)',
                 '--font-yi-cursive':
-                    'var(--res-font-yi-cursive)'
+                    'var(--font-yi-cursive)'
             };
-            
+
             document.documentElement.style.setProperty(
-                '--current-editor-font', 
+                '--current-editor-font',
                 fontMap[selectedFontVar]
             );
         });
-    };
+    }
 
     function updateTransliteration() {
         const text = editor.value;
@@ -120,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 result += char;
             }
         }
-    
+
         transContent.textContent = result;
     }
 
@@ -131,17 +173,17 @@ document.addEventListener('DOMContentLoaded', () => {
     copyBtn.addEventListener('click', () => {
         const textToCopy = editor.value;
         if (!textToCopy) {
-            alert(t('copy_empty')); 
+            alert(t('copy_empty'));
             return;
         }
-        
+
         navigator.clipboard.writeText(textToCopy).then(() => {
-            copyBtn.textContent = t('copied'); 
-            copyBtn.style.backgroundColor = "#10b981"; 
-            
+            copyBtn.textContent = t('copied');
+            copyBtn.style.backgroundColor = "#10b981";
+
             setTimeout(() => {
-                copyBtn.textContent = t('copy_btn'); 
-                copyBtn.style.backgroundColor = ""; 
+                copyBtn.textContent = t('copy_btn');
+                copyBtn.style.backgroundColor = "";
             }, 1500);
         }).catch(err => {
             console.error(t('copy_error'), err);
@@ -151,16 +193,188 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.whenPanelActivates = {};
 
-    document.querySelectorAll('.tab-btn').forEach(buttonSelected => {
-        buttonSelected.addEventListener('click', e => {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            buttonSelected.classList.add('active');
-            
-            const mode = buttonSelected.dataset.mode;
-            document.querySelectorAll('.mode-panel').forEach(panel => panel.classList.remove('active'));
-            document.getElementById(`panel-${mode}`).classList.add('active');
+    window._imeModeListeners = [];
 
-            if (mode in whenPanelActivates) whenPanelActivates[mode]();
-        });
+    const imeToggles = document.querySelectorAll('#ime-toggle .seg-item');
+
+    function switchImeMode(mode) {
+        imeToggles.forEach(b => b.classList.remove('active'));
+        imeToggles.forEach(b => { if (b.dataset.ime === mode) b.classList.add('active'); });
+        currentImeMode = mode;
+        clearCandidates();
+        _imeModeListeners.forEach(fn => fn(mode));
+    }
+
+    imeToggles.forEach(btn => {
+        btn.addEventListener('click', () => switchImeMode(btn.dataset.ime));
     });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            if (e.shiftKey) {
+                modeSwitch.click();
+            } else if (window.inViewMode !== true) {
+                const next = currentImeMode === 'stroke' ? 'pinyin' : 'stroke';
+                switchImeMode(next);
+            }
+        }
+    });
+
+    if (typeof initStrokeIME === 'function') initStrokeIME();
+    if (typeof initPinyinIME === 'function') initPinyinIME();
+
+    if (candidateToggle) {
+        candidateToggle.addEventListener('click', () => {
+            const isExpanded = candidateScroll.classList.toggle('expanded');
+            candidateToggle.textContent = t(isExpanded ? 'candidate_collapse' : 'candidate_expand');
+            const editorArea = candidateScroll.closest('.editor-area');
+            if (editorArea) editorArea.classList.toggle('candidates-expanded', isExpanded);
+            if (!isExpanded) candidateScroll.scrollTop = 0;
+        });
+    }
+
+    const cardFlow = document.getElementById('card-flow');
+
+    function findRadicalChar(char) {
+        for (const radicalChar in radicalMap) {
+            const data = radicalMap[radicalChar];
+            for (const [, syllables] of data.syllables) {
+                if (syllables.includes(charInfo[char])) return radicalChar;
+            }
+            if (data.radical_chars.includes(charInfo[char])) return radicalChar;
+        }
+        return '';
+    }
+
+    const cardPlaceholder = document.getElementById('card-placeholder');
+
+    function buildCardFlow() {
+        const text = editor.value;
+        cardFlow.querySelectorAll('.card-flow-card').forEach(el => el.remove());
+
+        if (!text) {
+            cardPlaceholder.classList.remove('hidden');
+            return;
+        }
+        cardPlaceholder.classList.add('hidden');
+
+        for (const char of text) {
+            const pinyin = charInfo[char];
+            if (!pinyin) continue;
+
+            const card = document.createElement('div');
+            card.className = 'card-flow-card';
+
+            const charSpan = document.createElement('span');
+            charSpan.className = 'card-flow-char';
+            charSpan.textContent = char;
+            card.appendChild(charSpan);
+
+            const body = document.createElement('div');
+            body.className = 'card-flow-body';
+
+            const pinyinLine = document.createElement('span');
+            pinyinLine.className = 'card-flow-pinyin';
+            pinyinLine.textContent = pinyin;
+            body.appendChild(pinyinLine);
+
+            const isIterMark = pinyin === 'w';
+            const isRadicalChar = pinyin.endsWith('=');
+            if (!isIterMark && !isRadicalChar) {
+                const ipa = toIPA(pinyin);
+                if (ipa) {
+                    const ipaSpan = document.createElement('span');
+                    ipaSpan.className = 'card-flow-ipa';
+                    ipaSpan.textContent = '/' + ipa + '/';
+                    body.appendChild(ipaSpan);
+                }
+            } else if (isRadicalChar) {
+                const label = document.createElement('span');
+                label.className = 'card-flow-ipa';
+                label.textContent = t('radical_char');
+                body.appendChild(label);
+            } else {
+                const label = document.createElement('span');
+                label.className = 'card-flow-ipa';
+                label.textContent = t('iteration_mark');
+                body.appendChild(label);
+            }
+
+            card.appendChild(body);
+
+            const radicalChar = findRadicalChar(char);
+            if (radicalChar) {
+                const radicalSpan = document.createElement('span');
+                radicalSpan.className = 'card-flow-radical';
+                radicalSpan.textContent = radicalChar;
+                card.appendChild(radicalSpan);
+            }
+            cardFlow.appendChild(card);
+        }
+    }
+
+    const editorBottom = document.querySelector('.editor-bottom');
+
+    const imeToggle = document.getElementById('ime-toggle');
+
+    if (modeSwitch) {
+        modeSwitch.addEventListener('click', () => {
+            const isView = modeSwitch.classList.toggle('view');
+            modeSwitch.querySelectorAll('.mode-switch-label').forEach(l => l.classList.remove('active'));
+            modeSwitch.querySelectorAll('.mode-switch-label')[isView ? 1 : 0].classList.add('active');
+            window.inViewMode = isView;
+            editor.classList.toggle('hidden', isView);
+            cardFlow.classList.toggle('hidden', !isView);
+            editorBottom.classList.toggle('hidden', isView);
+            imeToggle.classList.toggle('disabled', isView);
+            document.querySelectorAll('.char-btn').forEach(b => b.classList.toggle('disabled', isView));
+            if (isView) buildCardFlow();
+        });
+    }
+
+    const radicalPanel = document.querySelector('.radical-panel');
+    const radicalCloseBtn = document.getElementById('radical-close-btn');
+
+    if (dictBtn && radicalPanel) {
+        dictBtn.addEventListener('click', () => {
+            radicalPanel.classList.toggle('hidden');
+        });
+    }
+    if (radicalCloseBtn && radicalPanel) {
+        radicalCloseBtn.addEventListener('click', () => {
+            radicalPanel.classList.add('hidden');
+        });
+    }
+
+    setLanguage(document.getElementById('lang-selector').value);
 });
+
+function clearCandidates() {
+    if (candidateScroll) {
+        candidateScroll.querySelectorAll('.char-btn').forEach(el => el.remove());
+        candidateScroll.classList.remove('expanded');
+        const ph = candidateScroll.querySelector('.candidate-placeholder');
+        if (ph) ph.classList.remove('hidden');
+    }
+    if (candidateToggle) candidateToggle.style.display = 'none';
+}
+
+function showCandidates(chars) {
+    if (!candidateScroll) return;
+    candidateScroll.querySelectorAll('.char-btn').forEach(el => el.remove());
+    candidateScroll.classList.remove('expanded');
+    const ph = candidateScroll.querySelector('.candidate-placeholder');
+    if (ph) ph.classList.add('hidden');
+    if (chars.length === 0) return;
+    chars.forEach(([char, exact]) => {
+        const btn = createCharButton(char, exact);
+        if (btn) candidateScroll.appendChild(btn);
+    });
+    if (!candidateToggle) return;
+    requestAnimationFrame(() => {
+        const hasOverflow = candidateScroll.scrollHeight > candidateScroll.clientHeight;
+        candidateToggle.style.display = hasOverflow ? 'block' : 'none';
+        candidateToggle.textContent = t('candidate_expand');
+    });
+}

@@ -1,14 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof charInfo === 'undefined') {
-        alert(t('load_error'));
-        return;
-    }
-
+function initPinyinIME() {
     const pinyinInput = document.getElementById('pinyin-input');
-    const pinyinCharContainer = document.getElementById('pinyin-char-buttons');
-    const pinyinMatchCountLabel = document.getElementById('pinyin-match-count');
     const clearPinyinBtn = document.getElementById('clear-pinyin-btn');
-    // const submitPinyinBtn = document.getElementById('submit-pinyin-btn');
+    const pinyinIndicator = document.getElementById('pinyin-indicator');
 
     window.pinyinTrie = {};
 
@@ -34,9 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < l; ++i) {
             const ch = query[i];
 
-            if (ptr[ch]) { // can advance
+            if (ptr[ch]) {
                 ptr = ptr[ch];
-            } else { // cannot advance
+            } else {
                 if (ptr.pinyin) {
                     pinyins.push(ptr.pinyin);
                     trailerStart = i;
@@ -62,31 +55,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterCharsByPinyin() {
-        pinyinCharContainer.innerHTML = '';
         const query = pinyinInput.value.toLowerCase().trim();
 
         if (!query) {
-            pinyinCharContainer.innerHTML = `<p class="hint">${t('pinyin_hint')}</p>`;
-            pinyinMatchCountLabel.textContent = '0';
+            clearCandidates();
             return;
         }
 
-        queryCut = cutQuery(query);
+        const queryCut = cutQuery(query);
 
-        exactMatches = queryCut.slice(0, -1).map(pinyin =>
+        const exactMatches = queryCut.slice(0, -1).map(pinyin =>
             [charLookupReverse[pinyin], true]
         );
 
         const trailerQuery = queryCut.at(-1);
 
         const matchedEntries = Object.entries(charLookupReverse)
-            .filter(([pinyin, char]) => pinyin.startsWith(trailerQuery))
+            .filter(([pinyin]) => pinyin.startsWith(trailerQuery))
             .sort((entry1, entry2) => entry1[0].localeCompare(entry2[0]));
 
         const matchedChars = [...exactMatches, ...matchedEntries
             .map(([pinyin, char]) => [char, pinyin === trailerQuery])];
 
-        quotationFlags = Object.fromEntries(
+        const quotationFlags = Object.fromEntries(
             Object.entries(quotationMirror)
                 .map(quotationMark => [quotationMark, false]));
 
@@ -100,36 +91,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        pinyinMatchCountLabel.textContent = matchedChars.length;
-
-        if (matchedChars.length === 0) {
-            pinyinCharContainer.innerHTML = `<p class="hint">${t('pinyin_no_match')}</p>`;
-        } else {
-            matchedChars.forEach(([char, exact]) => {
-                const btn = createCharButton(char, exact);
-                if (btn) pinyinCharContainer.appendChild(btn);
-            });
-        }
+        showCandidates(matchedChars);
     }
 
     pinyinInput.addEventListener('input', filterCharsByPinyin);
 
     function flushPinyinExactMatches() {
-        const elements = pinyinCharContainer.querySelectorAll('.exact-match');
-        console.log(elements);
-        if (elements.length === 0) return;
+        const buttons = candidateBar.querySelectorAll('.exact-match');
+        if (buttons.length === 0) return;
 
-        const chars = Array.from(elements).map(elem => elem.textContent);
+        const chars = Array.from(buttons).map(btn => charFromBtn(btn));
         const str = chars.join('');
         insertAtCursor(editor, str);
         clearPinyin();
     }
 
     pinyinInput.addEventListener('keydown', (e) => {
-        if (e.key == 'Enter') flushPinyinExactMatches();
+        if (e.key === 'Enter') flushPinyinExactMatches();
     });
-
-    // submitPinyinBtn.addEventListener('click', flushPinyinExactMatches);
 
     function clearPinyin() {
         pinyinInput.value = "";
@@ -137,20 +116,36 @@ document.addEventListener('DOMContentLoaded', () => {
         pinyinInput.focus();
     }
 
-    clearPinyinBtn.addEventListener('click', clearPinyin);
+    if (clearPinyinBtn) {
+        clearPinyinBtn.addEventListener('click', clearPinyin);
+    }
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (document.getElementById('panel-pinyin').classList.contains('active')) {
-                if (document.activeElement === pinyinInput) {
-                    clearPinyin();
-                }
+        if (e.key === 'Escape' && currentImeMode === 'pinyin') {
+            if (document.activeElement === pinyinInput) {
+                clearPinyin();
             }
         }
     });
 
-    whenPanelActivates['pinyin'] = () => {
-        filterCharsByPinyin();
-        pinyinInput.focus();
-    };
-});
+    if (pinyinIndicator) {
+        pinyinIndicator.classList.toggle('hidden', currentImeMode !== 'pinyin');
+    }
+    if (clearPinyinBtn) {
+        clearPinyinBtn.classList.toggle('hidden', currentImeMode !== 'pinyin');
+    }
+    _imeModeListeners.push(function(mode) {
+        if (pinyinIndicator) {
+            pinyinIndicator.classList.toggle('hidden', mode !== 'pinyin');
+        }
+        if (clearPinyinBtn) {
+            clearPinyinBtn.classList.toggle('hidden', mode !== 'pinyin');
+        }
+        if (mode === 'pinyin') {
+            filterCharsByPinyin();
+            pinyinInput.focus();
+        } else {
+            clearPinyin();
+        }
+    });
+}

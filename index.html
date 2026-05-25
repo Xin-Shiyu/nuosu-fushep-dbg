@@ -19,7 +19,7 @@
                     <span data-i18n="subtitle">凉山规范彝文检字编辑器</span> <span>v0.1.9</span>
                 </div>
             <div class="header-controls">
-                <select class="select color-brand-input" id="lang-selector" onchange="setLanguage(this.value)">
+                <select class="select select-neutral" id="lang-selector" onchange="setLanguage(this.value)">
                     <option value="zh-CN" lang="zh-CN">简体中文</option>】
                     <option value="zh-TW" lang="zh-TW">繁體中文</option>
                     <option value="en" lang="en">English</option>
@@ -31,16 +31,90 @@
                 </select>
             </div>
         </header>
-        <main></main>
+        <main class="workspace">
+            <div class="toolbar">
+                <div class="toolbar-group">
+                    <div class="segmented" id="ime-toggle">
+                        <button class="seg-item active" data-ime="stroke" data-i18n="tab_stroke">笔画检字</button>
+                        <button class="seg-item" data-ime="pinyin" data-i18n="tab_pinyin">拉丁转写检字</button>
+                    </div>
+                </div>
+                <div class="toolbar-group">
+                    <button id="copy-btn" class="btn btn-primary" data-i18n="copy_btn">复制</button>
+                </div>
+            </div>
+
+            <div class="editor-area">
+                <textarea id="editor" data-i18n-placeholder="editor_placeholder" placeholder="在此处输入或点击下方按钮插入字符..."></textarea>
+                <div class="card-flow hidden" id="card-flow">
+                    <p class="card-flow-placeholder" id="card-placeholder" data-i18n="card_placeholder">请在编辑模式下粘贴文字以供检视</p>
+                </div>
+                <div class="transliteration-bar">
+                    <span class="trans-label" data-i18n="trans_label">拉丁转写：</span>
+                    <span id="trans-content"></span>
+                </div>
+                <div class="editor-bottom">
+                    <div class="candidate-bar" id="candidate-bar">
+                        <div class="candidate-scroll" id="candidate-scroll">
+                            <p class="candidate-placeholder" data-i18n="candidate_placeholder">候选字符将显示在此</p>
+                        </div>
+                        <button class="candidate-toggle" id="candidate-toggle" data-i18n="candidate_expand">展开</button>
+                    </div>
+                    <div class="input-controls">
+                        <div class="stroke-indicator" id="stroke-indicator">
+                            <span class="stroke-label-text" data-i18n="stroke_label">笔画：</span>
+                            <span id="stroke-display"></span>
+                        </div>
+                        <div class="pinyin-indicator hidden" id="pinyin-indicator">
+                            <input type="text" id="pinyin-input" class="pinyin-input-field" data-i18n-placeholder="pinyin_placeholder" placeholder="输入拉丁转写...">
+                        </div>
+                        <div class="stroke-keyboard" id="stroke-keyboard"></div>
+                        <div class="input-actions">
+                            <button class="btn btn-subtle" id="clear-stroke-btn" data-i18n="stroke_clear_btn">清空</button>
+                            <button class="btn btn-subtle hidden" id="clear-pinyin-btn" data-i18n="pinyin_clear_btn">清空</button>
+                            <button class="btn btn-subtle backspace-btn" id="backspace-btn">⌫</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="radical-panel hidden">
+                <div class="radical-panel-header">
+                    <span class="radical-panel-title" data-i18n="dict_btn">部首检字</span>
+                    <button class="btn btn-subtle" id="radical-close-btn">✕</button>
+                </div>
+                <div class="radical-panel-body">
+                    <div class="radical-list" id="radical-buttons"></div>
+                    <div class="radical-char-area">
+                        <span id="current-radical-label"></span>
+                        <div class="radical-char-list" id="radical-char-buttons"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="mode-switch" id="mode-switch">
+                    <span class="mode-switch-label active" data-i18n="switch_edit">编辑</span>
+                    <div class="mode-switch-track">
+                        <div class="mode-switch-knob"></div>
+                    </div>
+                    <span class="mode-switch-label" data-i18n="switch_view">检视</span>
+                </div>
+                <div id="info-display" data-i18n="info_default">悬停在字符上查看详细信息</div>
+                <button class="btn btn-subtle" data-i18n="dict_btn" id="dict-btn">部首检字</button>
+            </div>
+        </main>
     </div>
 
     <script src="data_chars.js"></script>
+    <script src="data_strokes.js"></script>
+    <script src="data_radicals.js"></script>
+    <script src="model/compress.js"></script>
+    <script src="model/model.js"></script>
     <script src="phonetics.js"></script>
     <script src="lang.js"></script>
     <script src="init.js"></script>
     <script src="radicals.js"></script>
-    <script src="model/compress.js"></script>
-    <script src="model/model.js"></script>
     <script src="strokes.js"></script>
     <script src="pinyin.js"></script>
 </body>

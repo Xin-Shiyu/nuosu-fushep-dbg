@@ -28,6 +28,7 @@ const translations = {
         radical_stroke_4: "四画",
         radical_stroke_5: "五画及以上",
         
+        stroke_label: "笔画：",
         stroke_input_title: "笔画输入",
         stroke_clear_btn: "清空笔画 (Esc)",
         stroke_keyboard_title: "笔画键盘",
@@ -56,7 +57,15 @@ const translations = {
         load_error: "加载错误",
         copy_empty: "文本框为空，无法复制。",
         copy_error: "复制错误",
-        copy_error_alert: "复制错误。"
+        copy_error_alert: "复制错误。",
+        card_btn: "查看模式",
+        card_placeholder: "请在编辑模式下粘贴文字以供检视",
+        candidate_placeholder: "候选字符将显示在此",
+        dict_btn: "部首检字",
+        switch_edit: "编辑",
+        switch_view: "检视",
+        candidate_expand: "展开\n全部",
+        candidate_collapse: "收起"
     },
     "zh-TW": {
         subtitle: "涼山規範彝文檢字編輯器",
@@ -87,6 +96,7 @@ const translations = {
         radical_stroke_4: "四畫",
         radical_stroke_5: "五畫及以上",
         
+        stroke_label: "筆畫：",
         stroke_input_title: "筆畫輸入",
         stroke_clear_btn: "清空筆畫 (Esc)",
         stroke_keyboard_title: "筆畫鍵盤",
@@ -115,7 +125,15 @@ const translations = {
         load_error: "載入錯誤",
         copy_empty: "文字框為空，無法複製。",
         copy_error: "複製錯誤",
-        copy_error_alert: "複製失敗。"
+        copy_error_alert: "複製失敗。",
+        card_btn: "查看模式",
+        card_placeholder: "請在編輯模式下粘貼文字以供檢視",
+        candidate_placeholder: "候選字元將顯示在此",
+        dict_btn: "部首檢字",
+        switch_edit: "編輯",
+        switch_view: "檢視",
+        candidate_expand: "展開\n全部",
+        candidate_collapse: "收起"
     },
     en: {
         subtitle: "Nuosu Yi Syllabary Character Finder & Editor",
@@ -146,6 +164,7 @@ const translations = {
         radical_stroke_4: "4 strokes",
         radical_stroke_5: "5+ strokes",
         
+        stroke_label: "Strokes: ",
         stroke_input_title: "Stroke Input",
         stroke_clear_btn: "Clear Strokes (Esc)",
         stroke_keyboard_title: "Stroke Keyboard",
@@ -174,7 +193,15 @@ const translations = {
         load_error: "Load Error",
         copy_empty: "No characters to be copy.",
         copy_error: "Copy Error",
-        copy_error_alert: "Copy error."
+        copy_error_alert: "Copy error.",
+        card_btn: "View Mode",
+        card_placeholder: "Paste text in Edit mode to inspect",
+        candidate_placeholder: "Candidates will appear here",
+        dict_btn: "Radical Dictionary",
+        switch_edit: "Edit",
+        switch_view: "Inspect",
+        candidate_expand: "Show all",
+        candidate_collapse: "Collapse"
     },
     ja: {
         subtitle: "フシャ — 涼山規範彝（イ）文字検索・編集ツール",
@@ -205,6 +232,7 @@ const translations = {
         radical_stroke_4: "四画",
         radical_stroke_5: "五画以上",
         
+        stroke_label: "筆画：",
         stroke_input_title: "筆画入力",
         stroke_clear_btn: "クリア (Esc)",
         stroke_keyboard_title: "筆画キーボード",
@@ -233,7 +261,15 @@ const translations = {
         load_error: "読み込みエラー",
         copy_empty: "コピーする文字がありません。",
         copy_error: "コピーエラー",
-        copy_error_alert: "コピーに失敗しました。手動でコピーしてください。"
+        copy_error_alert: "コピーに失敗しました。手動でコピーしてください。",
+        card_btn: "表示モード",
+        card_placeholder: "編集モードで文字を貼り付けて詳細表示",
+        candidate_placeholder: "候補文字がここに表示されます",
+        dict_btn: "部首辞典",
+        switch_edit: "編集",
+        switch_view: "詳細",
+        candidate_expand: "すべて\n表示",
+        candidate_collapse: "折りたたむ"
     },
     ko: {
         subtitle: "량산(涼山) 표준 이(彝) 문자 찾기 및 편집기",
@@ -264,6 +300,7 @@ const translations = {
         radical_stroke_4: "4획",
         radical_stroke_5: "5획 이상",
         
+        stroke_label: "획: ",
         stroke_input_title: "획 입력",
         stroke_clear_btn: "획 지우기 (Esc)",
         stroke_keyboard_title: "획 키보드",
@@ -292,7 +329,15 @@ const translations = {
         load_error: "로드 오류",
         copy_empty: "텍스트 상자가 비어 있어 복사할 수 없습니다.",
         copy_error: "복사 오류",
-        copy_error_alert: "복사 실패."
+        copy_error_alert: "복사 실패.",
+        card_btn: "보기 모드",
+        card_placeholder: "편집 모드에서 텍스트를 붙여넣어 검사하세요",
+        candidate_placeholder: "후보 문자가 여기에 표시됩니다",
+        dict_btn: "부수 사전",
+        switch_edit: "편집",
+        switch_view: "검사",
+        candidate_expand: "모두\n보기",
+        candidate_collapse: "접기"
     },
     ii: {
         subtitle: "ꆃꎭꋊꄻꆈꌠꁱꂷꎹꏦꏓꁱꅍ",
@@ -323,6 +368,7 @@ const translations = {
         radical_stroke_4: "ꇖꇅ",
         radical_stroke_5: "ꉬꇅꌋꆀꈍꉐ",
         
+        stroke_label: "ꁱꑟ：",
         stroke_input_title: "ꁱꑟꁱ",
         stroke_clear_btn: "ꌩꎳꇫꎭ (Esc)",
         stroke_keyboard_title: "笔画键盘",
@@ -351,7 +397,15 @@ const translations = {
         load_error: "加载错误",
         copy_empty: "文本框为空，无法复制。",
         copy_error: "复制错误",
-        copy_error_alert: "复制错误。"
+        copy_error_alert: "复制错误。",
+        card_btn: "ꁱꂷꑴꊐ",
+        card_placeholder: "ꎕꏦꌠꇬꁱꂷꇫꐛꄉꌌꇬꎹ",
+        candidate_placeholder: "ꉉꇰꁱꂷꋋꈨꊨꏦꐥꋭ",
+        dict_btn: "ꁱꀨꁱꂷ",
+        switch_edit: "ꁱꄻ",
+        switch_view: "ꌌꇬꎹ",
+        candidate_expand: "ꀉꂿꄜꑌ",
+        candidate_collapse: "ꁧꐙ"
     },
     za: {
         subtitle: "Hongdawz Rasaw Sanraiz Sawyizcuz Gveihfan Liengzsanh",
@@ -382,6 +436,7 @@ const translations = {
         radical_stroke_4: "Seiq bit",
         radical_stroke_5: "Haj bit caeuq doxhwnj",
         
+        stroke_label: "Bitveh: ",
         stroke_input_title: "Coqhaeuj bitveh",
         stroke_clear_btn: "Cawzseuq bitveh (Esc)",
         stroke_keyboard_title: "Aen genbanz bitveh",
@@ -410,7 +465,15 @@ const translations = {
         load_error: "Doeghaeuj okloek",
         copy_empty: "Aen gvaengh sijsaw neix hoengq, mbouj fukceiq ndaej.",
         copy_error: "Fukceiq okloek",
-        copy_error_alert: "Fukceiq okloek."
+        copy_error_alert: "Fukceiq okloek.",
+        card_btn: "Baiq cihsaw",
+        card_placeholder: "Caphaeuj cihsaw youq baiq sawgai daeuj roqni",
+        candidate_placeholder: "Cihsaw dawzcan youq gizneix",
+        dict_btn: "Sawloih",
+        switch_edit: "Sawgai",
+        switch_view: "Roqni",
+        candidate_expand: "Roqni gizcaeux",
+        candidate_collapse: "Rwz"
     },
     la: {
         subtitle: "Scriptorium & Quaesitorium Scripta Syllabaria Nuosu",
@@ -441,6 +504,7 @@ const translations = {
         radical_stroke_4: "4 tractûs",
         radical_stroke_5: "5 tractûs sive plures",
         
+        stroke_label: "Tractus: ",
         stroke_input_title: "Scribe tractûs",
         stroke_clear_btn: "Purgare (Esc)",
         stroke_keyboard_title: "Claviatura Tractuum",
@@ -469,7 +533,15 @@ const translations = {
         load_error: "Systema male lectum est",
         copy_empty: "Nihil duplicandum est.",
         copy_error: "Male cessit",
-        copy_error_alert: "Male cessit."
+        copy_error_alert: "Male cessit.",
+        card_btn: "Litterae singulae",
+        card_placeholder: "Pone textum in modo scribendi ad inspiciendum",
+        candidate_placeholder: "Litterae candidatae hic ostendentur",
+        dict_btn: "Lexicon",
+        switch_edit: "Scribere",
+        switch_view: "Inspicere",
+        candidate_expand: "Expande omnes",
+        candidate_collapse: "Collige"
     }
 };
 let currentLang = 'zh-CN'; 
@@ -514,17 +586,8 @@ function setLanguage(lang) {
         if (text) el.placeholder = text;
     });
 
-    const radicalLabel = document.getElementById('current-radical-name');
-    const radicalCharContainer = document.getElementById('radical-char-buttons');
-    
-    if (radicalLabel && radicalCharContainer) {
-        radicalLabel.textContent = t('radical_no_selection');
-        delete radicalLabel.dataset.radicalId;
-        radicalLabel.dataset.i18n = 'radical_no_selection';
-        radicalCharContainer.innerHTML = `<p class="hint">${t('radical_empty')}</p>`;
+    const infoDisplay = document.getElementById('info-display');
+    if (infoDisplay && !infoDisplay.dataset.custom) {
+        infoDisplay.textContent = t('info_default');
     }
-
-    refreshDynamicText();
 }
-
-document.addEventListener('DOMContentLoaded', () => setLanguage(document.getElementById('lang-selector').value));
