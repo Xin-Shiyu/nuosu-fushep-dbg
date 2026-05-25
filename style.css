@@ -89,6 +89,7 @@
 
   --font-yi-sans: "Niepsha Extremum", "Microsoft YaHei", sans-serif;
   --font-yi-cursive: "Niepsha Cursive", "Microsoft YaHei", sans-serif;
+  --font-ipa: "Fira Sans", serif;
   --current-editor-font: var(--font-yi-sans);
 }
 
@@ -858,6 +859,10 @@ button, select {
 }
 #dict-btn {
   font-size: var(--font-small);
+}
+.ipa { 
+  font-family: var(--font-ipa);
+  font-size: 105%; 
 }
 
 /* ──────────────── Radical Dictionary Panel ──────────────── */

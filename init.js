@@ -50,7 +50,7 @@ function createCharButton(char, exact = false) {
         if (ipa) {
             const ipaSpan = document.createElement('span');
             ipaSpan.className = 'char-ipa';
-            ipaSpan.textContent = '/' + ipa + '/';
+            ipaSpan.textContent = `<span class="ipa">/${ipa["phonemic"]}/ [${ipa["phonetic"]}]</span>`;
             btn.appendChild(ipaSpan);
         } else {
             const ipaSpan = document.createElement('span');
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const ipa = toIPA(pinyin);
             if (ipa) {
-                ipaPart = `<strong>${t('info_ipa')}:</strong> <span class="ipa">/${ipa}/</span>`
+                ipaPart = `<strong>${t('info_ipa')}:</strong> <span class="ipa">/${ipa["phonemic"]}/ [${ipa["phonetic"]}]</span>`
             } else {
                 ipaPart = t('punctuation_mark');
             }
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (ipa) {
                     const ipaSpan = document.createElement('span');
                     ipaSpan.className = 'card-flow-ipa';
-                    ipaSpan.textContent = '/' + ipa + '/';
+                    ipaSpan.textContent = `<span class="ipa">/${ipa["phonemic"]}/ [${ipa["phonetic"]}]</span>`;
                     body.appendChild(ipaSpan);
                 }
             } else if (isRadicalChar) {
