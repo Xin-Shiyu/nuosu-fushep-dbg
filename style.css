@@ -649,6 +649,10 @@ button, select {
   background-color: var(--c-bone-stain);
 }
 
+.candidate-bar.toggle-hidden .candidate-scroll {
+  right: 0;
+}
+
 .editor-area.candidates-expanded #editor {
   flex: 0 0 auto;
   min-height: 4rem;
@@ -757,6 +761,10 @@ button, select {
     overflow: hidden;
     padding: var(--space-intimate) var(--space-normal);
     padding-right: 3rem;
+  }
+
+  .candidate-bar.toggle-hidden .candidate-scroll {
+    padding-right: var(--space-normal);
   }
 
   .candidate-scroll .char-pinyin,

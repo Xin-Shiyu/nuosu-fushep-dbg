@@ -357,7 +357,10 @@ function clearCandidates() {
         const ph = candidateScroll.querySelector('.candidate-placeholder');
         if (ph) ph.classList.remove('hidden');
     }
-    if (candidateToggle) candidateToggle.style.display = 'none';
+    if (candidateToggle) {
+        candidateToggle.style.display = 'none';
+        if (candidateBar) candidateBar.classList.add('toggle-hidden');
+    }
 }
 
 function showCandidates(chars) {
@@ -375,6 +378,7 @@ function showCandidates(chars) {
     requestAnimationFrame(() => {
         const hasOverflow = candidateScroll.scrollHeight > candidateScroll.clientHeight;
         candidateToggle.style.display = hasOverflow ? 'block' : 'none';
+        candidateBar.classList.toggle('toggle-hidden', !hasOverflow);
         candidateToggle.textContent = t('candidate_expand');
     });
 }
