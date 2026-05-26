@@ -126,6 +126,11 @@ function initPinyinIME() {
         clearPinyinBtn.addEventListener('click', clearPinyin);
     }
 
+    const submitPinyinBtn = document.getElementById('pinyin-submit-btn');
+    if (submitPinyinBtn) {
+        submitPinyinBtn.addEventListener('click', flushPinyinExactMatches);
+    }
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && currentImeMode === 'pinyin') {
             if (document.activeElement === pinyinInput) {
@@ -146,6 +151,9 @@ function initPinyinIME() {
         }
         if (clearPinyinBtn) {
             clearPinyinBtn.classList.toggle('hidden', mode !== 'pinyin');
+        }
+        if (submitPinyinBtn) {
+            submitPinyinBtn.classList.toggle('hidden', mode !== 'pinyin');
         }
         if (mode === 'pinyin') {
             filterCharsByPinyin();

@@ -699,11 +699,16 @@ button, select {
 
 .pinyin-indicator {
   padding: var(--space-intimate);
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-intimate);
+  align-items: center;
 }
 .pinyin-indicator.hidden { display: none; }
 
 .pinyin-input-field {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: var(--space-intimate) var(--space-normal);
   border-radius: var(--radius-control);
   font-size: var(--font-small);
