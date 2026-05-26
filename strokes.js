@@ -119,16 +119,27 @@ function initStrokeIME() {
             filterCharsByStrokes();
             return;
         }
-        if (isMobile()) {
+        var start, end;
+        if (document.activeElement !== editor) {
+            editor.focus();
+            start = editor.selectionStart;
+            end = editor.selectionEnd;
+            if (isMobile()) editor.blur();
+        } else {
+            start = editor.selectionStart;
+            end = editor.selectionEnd;
+        }
+        if (start === 0 && end === 0) {
             if (editor.value.length === 0) return;
             editor.value = editor.value.slice(0, -1);
             editor.dispatchEvent(new Event('input', { bubbles: true }));
             return;
         }
-        const start = editor.selectionStart;
         if (start === 0) return;
-        editor.value = editor.value.slice(0, start - 1) + editor.value.slice(editor.selectionEnd);
-        editor.selectionStart = editor.selectionEnd = start - 1;
+        editor.value = editor.value.slice(0, start - 1) + editor.value.slice(end);
+        if (document.activeElement === editor) {
+            editor.selectionStart = editor.selectionEnd = start - 1;
+        }
         editor.dispatchEvent(new Event('input', { bubbles: true }));
     }
     window.deleteStroke = deleteStroke;
