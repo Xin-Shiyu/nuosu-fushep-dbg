@@ -555,7 +555,7 @@ button, select {
 }
 #editor::placeholder {
   color: var(--c-neutral-stain);
-  font-size: var(--font-base);
+  font-size: var(--editor-font-size, var(--font-xlarge));
   font-family: inherit;
 }
 
@@ -594,6 +594,7 @@ button, select {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: var(--space-tight) var(--space-intimate);
   border-radius: var(--radius-control);
   cursor: pointer;

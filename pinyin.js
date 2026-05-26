@@ -145,6 +145,9 @@ function initPinyinIME() {
     if (clearPinyinBtn) {
         clearPinyinBtn.classList.toggle('hidden', currentImeMode !== 'pinyin');
     }
+    if (submitPinyinBtn) {
+        submitPinyinBtn.classList.toggle('hidden', currentImeMode !== 'pinyin');
+    }
     _imeModeListeners.push(function(mode) {
         if (pinyinIndicator) {
             pinyinIndicator.classList.toggle('hidden', mode !== 'pinyin');
