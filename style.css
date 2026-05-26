@@ -130,7 +130,7 @@ html, body {
   justify-content: center;
 
   background-color: var(--c-bone-stain);
-  font-family: var(--current-editor-font);
+  font-family: var(--font-yi-sans);
 }
 
 .app {
@@ -478,7 +478,7 @@ button, select {
 
 .card-flow-card .card-flow-char {
   font-size: var(--font-xlarge);
-  font-family: var(--current-editor-font);
+  font-family: var(--font-yi-sans);
   line-height: 1.2;
   min-width: 2rem;
   text-align: center;
@@ -504,7 +504,7 @@ button, select {
 .card-flow-card .card-flow-radical {
   flex-shrink: 0;
   font-size: var(--font-large);
-  font-family: var(--current-editor-font);
+  font-family: var(--font-yi-sans);
   line-height: 1.2;
   color: var(--c-neutral-stain);
   min-width: 1.5rem;
