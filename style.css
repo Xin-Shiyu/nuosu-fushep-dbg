@@ -184,6 +184,34 @@ html, body {
 
 .header-controls {
   margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-normal);
+}
+
+.star-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1875rem;
+  padding: var(--space-intimate) var(--space-normal);
+  border-radius: var(--radius-control);
+  font-size: var(--font-small);
+  line-height: 1.4;
+  color: var(--c-hay-weight);
+  background-color: var(--c-hay-air);
+  border: 1px solid var(--c-hay-stain);
+  text-decoration: none;
+  transition: background-color 0.12s;
+}
+.star-btn:hover {
+  background-color: var(--c-hay-fade);
+}
+.star-btn:active {
+  background-color: var(--c-hay-stain);
+}
+.star-count {
+  font-weight: bold;
 }
 
 @media (min-width: 1000px) {
@@ -816,6 +844,10 @@ button, select {
     font-size: var(--font-small);
     padding: 0;
     white-space: pre-line;
+  }
+
+  .copy-label {
+    display: none;
   }
 
   .backspace-btn {

@@ -218,6 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateTransliteration();
 
+    const copyLabel = copyBtn.querySelector('.copy-label');
     copyBtn.addEventListener('click', () => {
         const textToCopy = editor.value;
         if (!textToCopy) {
@@ -226,11 +227,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         navigator.clipboard.writeText(textToCopy).then(() => {
-            copyBtn.textContent = t('copied');
+            copyLabel.textContent = t('copied');
             copyBtn.style.backgroundColor = "#10b981";
 
             setTimeout(() => {
-                copyBtn.textContent = t('copy_btn');
+                copyLabel.textContent = t('copy_btn');
                 copyBtn.style.backgroundColor = "";
             }, 1500);
         }).catch(err => {
@@ -238,6 +239,14 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(t('copy_error_alert'));
         });
     });
+
+    const starCount = document.getElementById('star-count');
+    if (starCount) {
+        fetch('https://api.github.com/repos/KotobaTrilius/nuosu-fushep')
+            .then(r => r.json())
+            .then(d => { if (d.stargazers_count !== undefined) starCount.textContent = d.stargazers_count; })
+            .catch(() => {});
+    }
 
     window.whenPanelActivates = {};
 
