@@ -294,6 +294,10 @@ button, select {
   background-color: var(--c-bone-deep);
 }
 
+.kbd-toggle-active {
+  opacity: 0.4;
+}
+
 /* --- Select --- */
 .select {
   display: inline-block;

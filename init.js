@@ -131,6 +131,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fontSelect = document.getElementById('editor-font-select');
 
+    var kbdBtn = document.getElementById('kbd-toggle');
+    if (kbdBtn) {
+        var kbdEnabled = localStorage.getItem('kbd-enabled') !== 'false';
+        if (!kbdEnabled) {
+            editor.setAttribute('inputmode', 'none');
+            kbdBtn.classList.add('kbd-toggle-active');
+        }
+        kbdBtn.addEventListener('click', function () {
+            var on = localStorage.getItem('kbd-enabled') !== 'false';
+            if (on) {
+                editor.setAttribute('inputmode', 'none');
+                localStorage.setItem('kbd-enabled', 'false');
+                kbdBtn.classList.add('kbd-toggle-active');
+            } else {
+                editor.removeAttribute('inputmode');
+                localStorage.setItem('kbd-enabled', 'true');
+                kbdBtn.classList.remove('kbd-toggle-active');
+            }
+        });
+    }
+
     editor.addEventListener('focus', () => {
         requestAnimationFrame(() => { savedPos = editor.selectionStart; });
     });
