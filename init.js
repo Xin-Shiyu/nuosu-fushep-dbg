@@ -421,6 +421,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function clearCandidates() {
     if (candidateScroll) {
+        var focused = document.activeElement;
+        if (focused && candidateScroll.contains(focused)) focused.blur();
         candidateScroll.querySelectorAll('.char-btn').forEach(el => el.remove());
         candidateScroll.classList.remove('expanded');
         const ph = candidateScroll.querySelector('.candidate-placeholder');
@@ -434,6 +436,8 @@ function clearCandidates() {
 
 function showCandidates(chars) {
     if (!candidateScroll) return;
+    var focused = document.activeElement;
+    if (focused && candidateScroll.contains(focused)) focused.blur();
     candidateScroll.querySelectorAll('.char-btn').forEach(el => el.remove());
     candidateScroll.classList.remove('expanded');
     const ph = candidateScroll.querySelector('.candidate-placeholder');
