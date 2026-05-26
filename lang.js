@@ -13,6 +13,10 @@ const translations = {
         editor_font_sans: "黑体",
         editor_font_cursive: "手写体",
         editor_font_size_select: "字号",
+        editor_font_size_small: "小",
+        editor_font_size_medium: "中",
+        editor_font_size_large: "大",
+        editor_font_size_xlarge: "特大",
         
         radical_select_title: "选择部首",
         radical_char: "部首",
@@ -149,6 +153,10 @@ const translations = {
         editor_font_sans: "Sans Serif",
         editor_font_cursive: "Cursive",
         editor_font_size_select: "Size",
+        editor_font_size_small: "Small",
+        editor_font_size_medium: "Medium",
+        editor_font_size_large: "Large",
+        editor_font_size_xlarge: "X-Large",
         
         radical_select_title: "Select Radical",
         radical_char: "Radical",

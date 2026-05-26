@@ -163,6 +163,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const sizeSelect = document.getElementById('editor-size-select');
+    if (sizeSelect) {
+        const savedSize = localStorage.getItem('editor-font-size');
+        if (savedSize) {
+            sizeSelect.value = savedSize;
+            document.documentElement.style.setProperty('--editor-font-size', savedSize);
+        }
+        sizeSelect.addEventListener('change', (e) => {
+            document.documentElement.style.setProperty('--editor-font-size', e.target.value);
+            localStorage.setItem('editor-font-size', e.target.value);
+        });
+    }
+
     function updateTransliteration() {
         const text = editor.value;
         let result = "";
