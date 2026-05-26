@@ -119,7 +119,7 @@ function initStrokeIME() {
             filterCharsByStrokes();
             return;
         }
-        if (document.activeElement !== editor) {
+        if (isMobile()) {
             if (editor.value.length === 0) return;
             editor.value = editor.value.slice(0, -1);
             editor.dispatchEvent(new Event('input', { bubbles: true }));
