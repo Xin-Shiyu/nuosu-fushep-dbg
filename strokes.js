@@ -119,6 +119,12 @@ function initStrokeIME() {
             filterCharsByStrokes();
             return;
         }
+        if (document.activeElement !== editor) {
+            if (editor.value.length === 0) return;
+            editor.value = editor.value.slice(0, -1);
+            editor.dispatchEvent(new Event('input', { bubbles: true }));
+            return;
+        }
         const start = editor.selectionStart;
         if (start === 0) return;
         editor.value = editor.value.slice(0, start - 1) + editor.value.slice(editor.selectionEnd);
