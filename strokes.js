@@ -121,13 +121,16 @@ function initStrokeIME() {
         }
         if (isMobile()) {
             if (editor.value.length === 0) return;
-            if (document.activeElement === editor) {
-                const start = editor.selectionStart;
-                if (start === 0) return;
-                editor.value = editor.value.slice(0, start - 1) + editor.value.slice(editor.selectionEnd);
-                editor.selectionStart = editor.selectionEnd = start - 1;
+            if (savedSelStart === savedSelEnd) {
+                if (savedSelStart === 0) {
+                    editor.value = editor.value.slice(0, -1);
+                } else {
+                    editor.value = editor.value.slice(0, savedSelStart - 1) + editor.value.slice(savedSelEnd);
+                    savedSelStart = savedSelEnd = savedSelStart - 1;
+                }
             } else {
-                editor.value = editor.value.slice(0, -1);
+                editor.value = editor.value.slice(0, savedSelStart) + editor.value.slice(savedSelEnd);
+                savedSelStart = savedSelEnd = savedSelStart;
             }
             editor.dispatchEvent(new Event('input', { bubbles: true }));
             return;

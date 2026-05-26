@@ -7,17 +7,16 @@ function isMobile() {
     return window.matchMedia('(max-width: 480px)').matches;
 }
 
+var savedSelStart = 0;
+var savedSelEnd = 0;
+
 function insertAtCursor(myField, myValue) {
     if (currentImeMode === 'stroke' && isMobile()) {
-        if (document.activeElement === myField) {
-            var startPos = myField.selectionStart;
-            var endPos = myField.selectionEnd;
-            myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-            myField.selectionStart = startPos + myValue.length;
-            myField.selectionEnd = startPos + myValue.length;
-        } else {
-            myField.value += myValue;
-        }
+        var startPos = savedSelStart;
+        var endPos = savedSelEnd;
+        myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+        savedSelStart = startPos + myValue.length;
+        savedSelEnd = savedSelStart;
         const event = new Event('input', { bubbles: true });
         myField.dispatchEvent(event);
         return;
@@ -130,6 +129,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.dictBtn = document.getElementById('dict-btn');
 
     const fontSelect = document.getElementById('editor-font-select');
+
+    editor.addEventListener('selectionchange', () => {
+        if (document.activeElement === editor) {
+            savedSelStart = editor.selectionStart;
+            savedSelEnd = editor.selectionEnd;
+        }
+    });
 
     infoDisplay.textContent = t('info_default');
     infoDisplay.dataset.i18n = 'info_default';
