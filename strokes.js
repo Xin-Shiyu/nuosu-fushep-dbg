@@ -156,7 +156,6 @@ function initStrokeIME() {
             if (typeof window.deleteStroke === 'function') {
                 window.deleteStroke();
             }
-            if (editor) editor.focus();
         });
     }
 

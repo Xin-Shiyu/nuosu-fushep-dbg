@@ -3,6 +3,10 @@ function charFromBtn(btn) {
   return glyph ? glyph.textContent : btn.textContent;
 }
 
+function isMobile() {
+    return window.matchMedia('(max-width: 480px)').matches;
+}
+
 function insertAtCursor(myField, myValue) {
     if (document.selection) {
         myField.focus();
@@ -16,10 +20,14 @@ function insertAtCursor(myField, myValue) {
         myField.scrollTop = scrollTop;
         myField.selectionStart = startPos + myValue.length;
         myField.selectionEnd = startPos + myValue.length;
-        myField.focus();
+        if (!(currentImeMode === 'stroke' && isMobile())) {
+            myField.focus();
+        }
     } else {
         myField.value += myValue;
-        myField.focus();
+        if (!(currentImeMode === 'stroke' && isMobile())) {
+            myField.focus();
+        }
     }
 
     const event = new Event('input', { bubbles: true });
