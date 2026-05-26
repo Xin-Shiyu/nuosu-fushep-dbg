@@ -228,11 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         navigator.clipboard.writeText(textToCopy).then(() => {
             copyLabel.textContent = t('copied');
-            copyBtn.style.backgroundColor = "#10b981";
 
             setTimeout(() => {
                 copyLabel.textContent = t('copy_btn');
-                copyBtn.style.backgroundColor = "";
             }, 1500);
         }).catch(err => {
             console.error(t('copy_error'), err);
