@@ -178,10 +178,25 @@ document.addEventListener('DOMContentLoaded', () => {
             sizeSelect.value = savedSize;
             document.documentElement.style.setProperty('--editor-font-size', savedSize);
         }
+        function applyFontSize(val) {
+            document.documentElement.style.setProperty('--editor-font-size', val);
+            localStorage.setItem('editor-font-size', val);
+        }
         sizeSelect.addEventListener('change', (e) => {
-            document.documentElement.style.setProperty('--editor-font-size', e.target.value);
-            localStorage.setItem('editor-font-size', e.target.value);
+            applyFontSize(e.target.value);
         });
+        document.addEventListener('wheel', (e) => {
+            if (!e.shiftKey) return;
+            e.preventDefault();
+            const opts = [...sizeSelect.options];
+            const idx = sizeSelect.selectedIndex;
+            const dir = e.deltaY > 0 ? -1 : 1;
+            const next = Math.max(0, Math.min(opts.length - 1, idx + dir));
+            if (next !== idx) {
+                sizeSelect.selectedIndex = next;
+                applyFontSize(opts[next].value);
+            }
+        }, { passive: false });
     }
 
     function updateTransliteration() {

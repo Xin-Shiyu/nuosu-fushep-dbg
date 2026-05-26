@@ -454,7 +454,7 @@ button, select {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(calc(7rem + var(--editor-font-size, 1.5rem) * 2.5), 1fr));
   gap: var(--space-intimate);
   align-content: flex-start;
   overflow-y: auto;
@@ -477,8 +477,8 @@ button, select {
 }
 
 .card-flow-card .card-flow-char {
-  font-size: var(--font-xlarge);
-  font-family: var(--font-yi-sans);
+  font-size: var(--editor-font-size, var(--font-xlarge));
+  font-family: var(--current-editor-font);
   line-height: 1.2;
   min-width: 2rem;
   text-align: center;
@@ -503,11 +503,11 @@ button, select {
 }
 .card-flow-card .card-flow-radical {
   flex-shrink: 0;
-  font-size: var(--font-large);
-  font-family: var(--font-yi-sans);
+  font-size: var(--editor-font-size, var(--font-large));
+  font-family: var(--current-editor-font);
   line-height: 1.2;
   color: var(--c-neutral-stain);
-  min-width: 1.5rem;
+  min-width: calc(var(--editor-font-size, 1.5rem) * 1.2);
   text-align: center;
 }
 
@@ -535,15 +535,15 @@ button, select {
     padding: var(--space-intimate);
   }
   .card-flow-card .card-flow-char {
-    font-size: var(--font-normal);
+    font-size: var(--editor-font-size, var(--font-normal));
     min-width: 1.5rem;
   }
   .card-flow-card .card-flow-body {
     font-size: var(--font-micro);
   }
   .card-flow-card .card-flow-radical {
-    font-size: var(--font-base);
-    min-width: 1rem;
+    font-size: var(--editor-font-size, var(--font-base));
+    min-width: calc(var(--editor-font-size, var(--font-normal)) * 0.8);
   }
 }
 
@@ -609,6 +609,7 @@ button, select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: var(--current-editor-font);
   padding: var(--space-tight) var(--space-intimate);
   border-radius: var(--radius-control);
   cursor: pointer;
@@ -800,7 +801,8 @@ button, select {
     display: block;
   }
 
-  .candidate-scroll .char-suffix {
+  .candidate-scroll .char-suffix,
+  .candidate-scroll .char-index {
     display: none;
   }
 

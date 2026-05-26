@@ -1,0 +1,61 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: ꃚꎹ
+      - generic [ref=e6]: "| FUSHEP"
+    - generic [ref=e7]: 凉山规范彝文检字编辑器 v1.0.0
+    - combobox [ref=e9] [cursor=pointer]:
+      - option "简体中文" [selected]
+      - text: 】
+      - option "繁體中文"
+      - option "English"
+      - option "日本語"
+      - option "한국어"
+      - option "ꆈꌠ꒿（ꎕꏦ）"
+      - option "Vahcuengh"
+      - option "Lingua Latina"
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e13]:
+        - button "笔画检字（测试）" [active] [ref=e14] [cursor=pointer]
+        - button "拉丁转写检字" [ref=e15] [cursor=pointer]
+      - button "📋 复制文本" [ref=e17] [cursor=pointer]
+    - generic [ref=e18]:
+      - textbox "在此处输入或点击下方按钮插入字符..." [ref=e19]: ꀀ
+      - generic [ref=e20]: 拉丁转写： [it]
+      - generic [ref=e21]:
+        - paragraph [ref=e24]: 候选字符将显示在此
+        - generic [ref=e25]:
+          - generic [ref=e27]: 笔画：
+          - generic [ref=e28]:
+            - button "H" [ref=e29] [cursor=pointer]
+            - button "I" [ref=e30] [cursor=pointer]
+            - button "F" [ref=e31] [cursor=pointer]
+            - button "V" [ref=e32] [cursor=pointer]
+            - button "R" [ref=e33] [cursor=pointer]
+            - button "O" [ref=e34] [cursor=pointer]
+            - button "Q" [ref=e35] [cursor=pointer]
+            - button "P" [ref=e36] [cursor=pointer]
+            - button "D" [ref=e37] [cursor=pointer]
+            - button "C" [ref=e38] [cursor=pointer]
+            - button "A" [ref=e39] [cursor=pointer]
+            - button "U" [ref=e40] [cursor=pointer]
+            - button "S" [ref=e41] [cursor=pointer]
+            - button "E" [ref=e42] [cursor=pointer]
+            - button "J" [ref=e43] [cursor=pointer]
+            - button "L" [ref=e44] [cursor=pointer]
+            - button "Z" [ref=e45] [cursor=pointer]
+            - button "N" [ref=e46] [cursor=pointer]
+            - button "M" [ref=e47] [cursor=pointer]
+            - button "G" [ref=e48] [cursor=pointer]
+            - button "X" [ref=e49] [cursor=pointer]
+            - button "T" [ref=e50] [cursor=pointer]
+            - button "K" [ref=e51] [cursor=pointer]
+            - button "B" [ref=e52] [cursor=pointer]
+          - button "清空笔画 (Esc)" [ref=e54] [cursor=pointer]
+    - generic [ref=e55]:
+      - generic [ref=e56] [cursor=pointer]:
+        - generic [ref=e57]: 编辑
+        - generic [ref=e60]: 检视
+      - generic [ref=e61]: 将鼠标指针悬停在字符上查看详细信息
+      - button "部首检字" [ref=e62] [cursor=pointer]
