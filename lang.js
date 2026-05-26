@@ -204,7 +204,7 @@ const translations = {
         candidate_collapse: "Collapse"
     },
     ja: {
-        subtitle: "フシャ — 涼山規範彝（イ）文字検索・編集ツール",
+        subtitle: "フシュ — 涼山規範彝（イ）文字検索・編集ツール",
         star_me: "GitHubのスターをお願いします →",
         editor_placeholder: "ここに入力するか、ボタンをクリックして文字を挿入...",
         copy_btn: "📋 テキストをコピー",
@@ -398,14 +398,15 @@ const translations = {
         copy_empty: "文本框为空，无法复制。",
         copy_error: "复制错误",
         copy_error_alert: "复制错误。",
-        card_btn: "ꁱꂷꑴꊐ",
-        card_placeholder: "ꎕꏦꌠꇬꁱꂷꇫꐛꄉꌌꇬꎹ",
-        candidate_placeholder: "ꉉꇰꁱꂷꋋꈨꊨꏦꐥꋭ",
-        dict_btn: "ꁱꀨꁱꂷ",
-        switch_edit: "ꁱꄻ",
-        switch_view: "ꌌꇬꎹ",
-        candidate_expand: "ꀉꂿꄜꑌ",
-        candidate_collapse: "ꁧꐙ"
+        card_btn: "ꄯꒉꉜꈁꏦ",
+        card_placeholder: "",
+        card_placeholder: "请在编辑模式下粘贴文字以供检视",
+        candidate_placeholder: "候选字符将显示在此",
+        dict_btn: "ꁱꀨꁱꍝꄯꒉ",
+        switch_edit: "ꏓꁱ",
+        switch_view: "ꄯꒉꉜ",
+        candidate_expand: "展开\n全部",
+        candidate_collapse: "收起"
     },
     za: {
         subtitle: "Hongdawz Rasaw Sanraiz Sawyizcuz Gveihfan Liengzsanh",
@@ -466,14 +467,14 @@ const translations = {
         copy_empty: "Aen gvaengh sijsaw neix hoengq, mbouj fukceiq ndaej.",
         copy_error: "Fukceiq okloek",
         copy_error_alert: "Fukceiq okloek.",
-        card_btn: "Baiq cihsaw",
-        card_placeholder: "Caphaeuj cihsaw youq baiq sawgai daeuj roqni",
-        candidate_placeholder: "Cihsaw dawzcan youq gizneix",
-        dict_btn: "Sawloih",
-        switch_edit: "Sawgai",
-        switch_view: "Roqni",
-        candidate_expand: "Roqni gizcaeux",
-        candidate_collapse: "Rwz"
+        card_btn: "Vunqsik cazyawj",
+        card_placeholder: "Youq vunqsik biensij diep gij saw daeuj yawj",
+        candidate_placeholder: "Gij saw deqsienj youq gizneix okyienh",
+        dict_btn: "Aeu busouj ra",
+        switch_edit: "Sij",
+        switch_view: "Yawj",
+        candidate_expand: "Mbe",
+        candidate_collapse: "Conz"
     },
     la: {
         subtitle: "Scriptorium & Quaesitorium Scripta Syllabaria Nuosu",
@@ -534,14 +535,14 @@ const translations = {
         copy_empty: "Nihil duplicandum est.",
         copy_error: "Male cessit",
         copy_error_alert: "Male cessit.",
-        card_btn: "Litterae singulae",
-        card_placeholder: "Pone textum in modo scribendi ad inspiciendum",
-        candidate_placeholder: "Litterae candidatae hic ostendentur",
-        dict_btn: "Lexicon",
+        card_btn: "Modus Inspectatoris",
+        card_placeholder: "Hîc litteras scribe ut inspiciantur",
+        candidate_placeholder: "Litterae candidatae hîc ostendentur",
+        dict_btn: "Index Radicum",
         switch_edit: "Scribere",
         switch_view: "Inspicere",
-        candidate_expand: "Expande omnes",
-        candidate_collapse: "Collige"
+        candidate_expand: "Expandere",
+        candidate_collapse: "Colligere"
     }
 };
 let currentLang = 'zh-CN'; 

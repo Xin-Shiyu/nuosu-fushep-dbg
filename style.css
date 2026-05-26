@@ -485,6 +485,7 @@ button, select {
 }
 .card-flow-card .card-flow-body .card-flow-ipa {
   color: var(--c-neutral-fade);
+  font-family: var(--font-ipa);
 }
 .card-flow-card .card-flow-radical {
   flex-shrink: 0;
@@ -616,6 +617,7 @@ button, select {
 .char-pinyin,
 .char-ipa {
   display: none;
+  font-family: var(--font-ipa);
   font-size: 0.5625rem;
   line-height: 1.2;
   color: var(--c-neutral-fade);

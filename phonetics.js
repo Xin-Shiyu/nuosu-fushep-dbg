@@ -103,8 +103,8 @@ function toIPA(pinyin) {
 
     const initial_alt = {
         "u": {
-            "bb": "b<sup>(~ʙ)</sup>",
-            "nb": "mb<sup>(~ʙ)</sup>",
+            "bb": "b(~ʙ)",
+            "nb": "mb(~ʙ)",
             "dd": "dʙ",
             "nd": "ndʙ"
         },
@@ -139,7 +139,7 @@ function toIPA(pinyin) {
             [["l", "hl"], "̙̩˞"]
         ],
         "ie": [
-            [["j", "q", "jj", "nj", "ny", "x", "y"], "ɛ̙ᵊ<sup>(~a̙)</sup>"]
+            [["j", "q", "jj", "nj", "ny", "x", "y"], "ɛ̙ᵊ(~a̙)"]
         ]
     }
     if (final_alt_groups[final]) {
