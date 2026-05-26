@@ -121,18 +121,13 @@ function initStrokeIME() {
         }
         if (isMobile()) {
             if (editor.value.length === 0) return;
-            if (savedSelStart === -1) {
-                editor.value = editor.value.slice(0, -1);
-            } else if (savedSelStart === savedSelEnd) {
-                if (savedSelStart === 0) {
-                    editor.value = editor.value.slice(0, -1);
-                } else {
-                    editor.value = editor.value.slice(0, savedSelStart - 1) + editor.value.slice(savedSelEnd);
-                    savedSelStart = savedSelEnd = savedSelStart - 1;
-                }
+            var s = editor.selectionStart, e = editor.selectionEnd;
+            if (s || s === 0) {
+                if (s === 0) { editor.value = editor.value.slice(0, -1); return; }
+                editor.value = editor.value.slice(0, s - 1) + editor.value.slice(e);
+                editor.selectionStart = editor.selectionEnd = s - 1;
             } else {
-                editor.value = editor.value.slice(0, savedSelStart) + editor.value.slice(savedSelEnd);
-                savedSelStart = savedSelEnd = savedSelStart;
+                editor.value = editor.value.slice(0, -1);
             }
             editor.dispatchEvent(new Event('input', { bubbles: true }));
             return;

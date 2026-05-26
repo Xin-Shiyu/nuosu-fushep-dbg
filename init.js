@@ -7,21 +7,17 @@ function isMobile() {
     return window.matchMedia('(max-width: 480px)').matches;
 }
 
-var savedSelStart = -1;
-var savedSelEnd = -1;
-
 function insertAtCursor(myField, myValue) {
     if (currentImeMode === 'stroke' && isMobile()) {
-        var startPos = savedSelStart;
-        var endPos = savedSelEnd;
-        if (startPos === -1) {
-            myField.value += myValue;
-            savedSelStart = myField.value.length;
-        } else {
+        var startPos = myField.selectionStart;
+        var endPos = myField.selectionEnd;
+        if (startPos || startPos === 0) {
             myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-            savedSelStart = startPos + myValue.length;
+            myField.selectionStart = startPos + myValue.length;
+            myField.selectionEnd = startPos + myValue.length;
+        } else {
+            myField.value += myValue;
         }
-        savedSelEnd = savedSelStart;
         const event = new Event('input', { bubbles: true });
         myField.dispatchEvent(event);
         return;
@@ -135,12 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fontSelect = document.getElementById('editor-font-select');
 
-    editor.addEventListener('focus', () => {
-        requestAnimationFrame(() => {
-            savedSelStart = editor.selectionStart;
-            savedSelEnd = editor.selectionEnd;
-        });
-    });
+
 
     infoDisplay.textContent = t('info_default');
     infoDisplay.dataset.i18n = 'info_default';
