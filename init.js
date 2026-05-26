@@ -7,15 +7,20 @@ function isMobile() {
     return window.matchMedia('(max-width: 480px)').matches;
 }
 
-var savedSelStart = 0;
-var savedSelEnd = 0;
+var savedSelStart = -1;
+var savedSelEnd = -1;
 
 function insertAtCursor(myField, myValue) {
     if (currentImeMode === 'stroke' && isMobile()) {
         var startPos = savedSelStart;
         var endPos = savedSelEnd;
-        myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-        savedSelStart = startPos + myValue.length;
+        if (startPos === -1) {
+            myField.value += myValue;
+            savedSelStart = myField.value.length;
+        } else {
+            myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+            savedSelStart = startPos + myValue.length;
+        }
         savedSelEnd = savedSelStart;
         const event = new Event('input', { bubbles: true });
         myField.dispatchEvent(event);
@@ -130,11 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fontSelect = document.getElementById('editor-font-select');
 
-    editor.addEventListener('selectionchange', () => {
-        if (document.activeElement === editor) {
-            savedSelStart = editor.selectionStart;
-            savedSelEnd = editor.selectionEnd;
-        }
+    editor.addEventListener('click', () => {
+        savedSelStart = editor.selectionStart;
+        savedSelEnd = editor.selectionEnd;
     });
 
     infoDisplay.textContent = t('info_default');
