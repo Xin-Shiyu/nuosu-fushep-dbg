@@ -157,6 +157,7 @@ function initStrokeIME() {
     window.flushStrokeCandidate = function(char) {
         insertAtCursor(editor, char);
         clearStrokes();
+        if (isMobile() && document.activeElement !== editor) editor.focus();
     };
 
     if (clearStrokeBtn) {
@@ -169,6 +170,7 @@ function initStrokeIME() {
             if (typeof window.deleteStroke === 'function') {
                 window.deleteStroke();
             }
+            if (isMobile() && document.activeElement !== editor) editor.focus();
         });
     }
 
