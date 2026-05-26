@@ -121,6 +121,7 @@ function initStrokeIME() {
         }
         if (isMobile()) {
             if (editor.value.length === 0) return;
+            if (document.activeElement !== editor) editor.focus();
             var s = editor.selectionStart, e = editor.selectionEnd;
             if (s || s === 0) {
                 if (s === 0) { editor.value = editor.value.slice(0, -1); return; }
@@ -157,7 +158,6 @@ function initStrokeIME() {
     window.flushStrokeCandidate = function(char) {
         insertAtCursor(editor, char);
         clearStrokes();
-        if (isMobile() && document.activeElement !== editor) editor.focus();
     };
 
     if (clearStrokeBtn) {

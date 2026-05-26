@@ -9,6 +9,7 @@ function isMobile() {
 
 function insertAtCursor(myField, myValue) {
     if (currentImeMode === 'stroke' && isMobile()) {
+        if (document.activeElement !== myField) myField.focus();
         var startPos = myField.selectionStart;
         var endPos = myField.selectionEnd;
         if (startPos || startPos === 0) {
