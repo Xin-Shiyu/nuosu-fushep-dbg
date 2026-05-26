@@ -1,3 +1,16 @@
+@font-face {
+  font-family: "Niepsha Extremum";
+  src: url("fonts/NiepShaExtremum-Sans-Beta-Medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Niepsha Cursive";
+  src: url("fonts/NiepShaExtremum-Cursive-Beta-Medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   /* Design System Tokens.
      Always use the tokens here. */
