@@ -135,9 +135,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fontSelect = document.getElementById('editor-font-select');
 
-    editor.addEventListener('click', () => {
-        savedSelStart = editor.selectionStart;
-        savedSelEnd = editor.selectionEnd;
+    editor.addEventListener('focus', () => {
+        requestAnimationFrame(() => {
+            savedSelStart = editor.selectionStart;
+            savedSelEnd = editor.selectionEnd;
+        });
     });
 
     infoDisplay.textContent = t('info_default');

@@ -121,7 +121,9 @@ function initStrokeIME() {
         }
         if (isMobile()) {
             if (editor.value.length === 0) return;
-            if (savedSelStart === savedSelEnd) {
+            if (savedSelStart === -1) {
+                editor.value = editor.value.slice(0, -1);
+            } else if (savedSelStart === savedSelEnd) {
                 if (savedSelStart === 0) {
                     editor.value = editor.value.slice(0, -1);
                 } else {
