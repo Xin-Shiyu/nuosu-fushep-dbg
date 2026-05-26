@@ -74,8 +74,14 @@ function initPinyinIME() {
             .filter(([pinyin]) => pinyin.startsWith(trailerQuery))
             .sort((entry1, entry2) => entry1[0].localeCompare(entry2[0]));
 
-        const matchedChars = [...exactMatches, ...matchedEntries
-            .map(([pinyin, char]) => [char, pinyin === trailerQuery])];
+        const matchedChars = [
+            ...exactMatches.map(([char]) => [char, true, '']),
+            ...matchedEntries.map(([pinyin, char]) => {
+                const isExact = pinyin === trailerQuery;
+                const suffix = isExact ? '' : '-' + pinyin.substring(trailerQuery.length);
+                return [char, isExact, suffix];
+            })
+        ];
 
         const quotationFlags = Object.fromEntries(
             Object.entries(quotationMirror)

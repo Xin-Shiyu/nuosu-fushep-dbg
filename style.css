@@ -622,6 +622,14 @@ button, select {
   line-height: 1.2;
   color: var(--c-neutral-fade);
 }
+
+.char-index,
+.char-suffix {
+  display: block;
+  font-size: 0.5625rem;
+  line-height: 1.2;
+  color: var(--c-neutral-stain);
+}
 .char-glyph {
   display: block;
   font-size: var(--font-yi-large);
@@ -770,6 +778,10 @@ button, select {
   .candidate-scroll .char-pinyin,
   .candidate-scroll .char-ipa {
     display: block;
+  }
+
+  .candidate-scroll .char-suffix {
+    display: none;
   }
 
   .candidate-toggle {

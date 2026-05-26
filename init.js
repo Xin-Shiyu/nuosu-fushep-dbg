@@ -26,12 +26,24 @@ function insertAtCursor(myField, myValue) {
     myField.dispatchEvent(event);
 }
 
-function createCharButton(char, exact = false) {
+function createCharButton(char, exact = false, extra = null) {
     const btn = document.createElement('button');
     btn.className = exact ? 'char-btn exact-match' : 'char-btn';
 
     const pinyin = charInfo[char];
     const showLabels = pinyin && pinyin !== 'w' && !pinyin.endsWith('=');
+
+    if (extra) {
+        const extraSpan = document.createElement('span');
+        if (extra.index !== undefined && extra.index < 9) {
+            extraSpan.className = 'char-index';
+            extraSpan.textContent = extra.index + 1;
+        } else if (extra.suffix) {
+            extraSpan.className = 'char-suffix';
+            extraSpan.textContent = extra.suffix;
+        }
+        if (extraSpan.className) btn.appendChild(extraSpan);
+    }
 
     if (showLabels) {
         const pinyinSpan = document.createElement('span');
@@ -370,8 +382,17 @@ function showCandidates(chars) {
     const ph = candidateScroll.querySelector('.candidate-placeholder');
     if (ph) ph.classList.add('hidden');
     if (chars.length === 0) return;
-    chars.forEach(([char, exact]) => {
-        const btn = createCharButton(char, exact);
+    chars.forEach((item, index) => {
+        const char = item[0];
+        const exact = item[1];
+        const suffix = item[2] || '';
+        let extra = null;
+        if (currentImeMode === 'stroke' && index < 9) {
+            extra = { index };
+        } else if (currentImeMode === 'pinyin' && suffix) {
+            extra = { suffix };
+        }
+        const btn = createCharButton(char, exact, extra);
         if (btn) candidateScroll.appendChild(btn);
     });
     if (!candidateToggle) return;
