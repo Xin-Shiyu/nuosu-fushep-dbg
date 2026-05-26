@@ -8,6 +8,12 @@ function isMobile() {
 }
 
 function insertAtCursor(myField, myValue) {
+    if (currentImeMode === 'stroke' && isMobile()) {
+        myField.value += myValue;
+        const event = new Event('input', { bubbles: true });
+        myField.dispatchEvent(event);
+        return;
+    }
     if (document.selection) {
         myField.focus();
         sel = document.selection.createRange();
@@ -20,14 +26,10 @@ function insertAtCursor(myField, myValue) {
         myField.scrollTop = scrollTop;
         myField.selectionStart = startPos + myValue.length;
         myField.selectionEnd = startPos + myValue.length;
-        if (!(currentImeMode === 'stroke' && isMobile())) {
-            myField.focus();
-        }
+        myField.focus();
     } else {
         myField.value += myValue;
-        if (!(currentImeMode === 'stroke' && isMobile())) {
-            myField.focus();
-        }
+        myField.focus();
     }
 
     const event = new Event('input', { bubbles: true });
